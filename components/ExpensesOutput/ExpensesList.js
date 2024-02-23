@@ -5,7 +5,7 @@ const renderExpenseItem = itemData => {
 }
 const ExpensesList = ({ expenses }) => {
   return (
-    <FlatList
+    <FlatList style={styles.container}
       data={expenses}
       renderItem={renderExpenseItem}
       keyExtractor={item => item.id}
@@ -15,4 +15,8 @@ const ExpensesList = ({ expenses }) => {
 
 export default ExpensesList
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 10
+  }
+})
