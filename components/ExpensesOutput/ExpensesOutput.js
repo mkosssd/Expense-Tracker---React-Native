@@ -6,7 +6,7 @@ import { GlobalStyles } from '../../constants/styles'
 const ExpensesOutput = ({ expenses, expensesPeriod, fallback }) => {
   let content = <Text style={styles.infoText}>{fallback}</Text>
   if (expenses.length > 0) {
-    // content = <ExpensesList expenses={expenses} />
+    content = <ExpensesList expenses={expenses} />
   }
   return (
     <View style={styles.container}>
