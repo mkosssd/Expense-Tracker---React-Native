@@ -41,7 +41,7 @@ const ManageExpense = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <ExpenseForm
-        editingLabel={isEditing}
+        isEditing={isEditing}
         onCancel={cancelHandler}
         onSubmit={confirmHandler}
         selectedExpense={selectedExpense}

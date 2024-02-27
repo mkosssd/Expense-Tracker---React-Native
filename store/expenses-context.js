@@ -48,7 +48,6 @@ function ExpensesReducer (state, action) {
       return state.filter(expense => expense.id !== action.payload)
 
     case 'UPDATE':
-      console.log(action.payload.data);
       const index = state.findIndex(expense => expense.id === action.payload.id)
       const updatableExpense = state[index]
       const updatedItem = { ...updatableExpense, ...action.payload.data }
