@@ -54,7 +54,7 @@ const ManageExpense = ({ route, navigation }) => {
       setIsSubmitting(false)
     }
 
-    // navigation.goBack()
+    navigation.goBack()
   }
 
   useLayoutEffect(() => {

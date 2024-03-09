@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expenseTracker",
-    "slug": "expenseTracker",
+    "name": "My Expense Tracker",
+    "slug": "expense-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "1.0.0",
+      "bundleIdentifier": "com.foolpool.expenseTracker"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "versionCode": 1,
+      "package": "com.foolpool.expenseTracker"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "85cb6054-a443-49fd-ac93-6489a08adef4"
+      }
+    },
+    "owner": "foolpool"
   }
 }
