@@ -1,12 +1,11 @@
 import { useContext, useState } from 'react'
 
 // import LoadingOverlay from '../components/ui/LoadingOverlay';
+import { Alert } from 'react-native'
 import Signup from '../../components/Auth/Signup'
-import { Alert, StyleSheet, Text, View } from 'react-native'
-import { createUser } from '../../util/http'
-import { AuthContext } from '../../store/Auth-context'
-import AppLoading from 'expo-app-loading'
 import LoadingOverlay from '../../components/UI/LoadingOverlay'
+import { AuthContext } from '../../store/Auth-context'
+import { createUser } from '../../util/http'
 
 function SignupScreen () {
   const [isAuthenticating, setIsAuthenticating] = useState(false)
