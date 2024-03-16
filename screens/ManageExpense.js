@@ -11,6 +11,7 @@ import {
 } from '../util/http'
 import LoadingOverlay from '../components/UI/LoadingOverlay'
 import ErrorOverlay from '../components/UI/ErrorOverlay'
+import { AuthContext } from '../store/Auth-context'
 
 const ManageExpense = ({ route, navigation }) => {
   const [error, setError] = useState()
@@ -24,10 +25,12 @@ const ManageExpense = ({ route, navigation }) => {
   )
 
   const deleteHandler = async () => {
+    const authCtx = useContext(AuthContext)
+    const token = authCtx.token
     setIsSubmitting(true)
     expenseCtx.deleteExpense(editedExpenseId)
     try {
-      await deleteExpenseRequest(editedExpenseId)
+      await deleteExpenseRequest(editedExpenseId, token)
     } catch {
       setError('Unable To Delete The Expense - Please Try Again Later.')
     }
@@ -41,18 +44,20 @@ const ManageExpense = ({ route, navigation }) => {
 
   const confirmHandler = async enteredValues => {
     setIsSubmitting(true)
+    const authCtx = useContext(AuthContext)
+    const token = authCtx.token
     try {
       if (isEditing) {
         expenseCtx.updateExpense(editedExpenseId, enteredValues)
-        await updateExpenseRequest(editedExpenseId, enteredValues)
+        await updateExpenseRequest(editedExpenseId, enteredValues, token)
       } else {
-        const id = await storeExpenseRequest(enteredValues)
+        const id = await storeExpenseRequest(enteredValues, token)
         expenseCtx.addExpense({ id: id, ...enteredValues })
       }
     } catch (error) {
       setError('Could Not Save Data - Please Try Again Later!')
-      setIsSubmitting(false)
     }
+    setIsSubmitting(false)
 
     navigation.goBack()
   }

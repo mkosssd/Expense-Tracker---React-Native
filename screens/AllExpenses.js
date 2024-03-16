@@ -5,16 +5,20 @@ import { ExpensesContext } from '../store/expenses-context'
 import LoadingOverlay from '../components/UI/LoadingOverlay'
 import ErrorOverlay from '../components/UI/ErrorOverlay'
 import { getExpensesRequest } from '../util/http'
+import { AuthContext } from '../store/Auth-context'
 
 const AllExpenses = () => {
   const expenseCtx = useContext(ExpensesContext)
+  const authCtx = useContext(AuthContext)
+  const token = authCtx.token
   const [isFetching, setIsFetching] = useState()
   const [error, setError] = useState()
   useEffect(() => {
     async function fetchExpenses () {
+    
       setIsFetching(true)
       try {
-        const expenses = await getExpensesRequest()
+        const expenses = await getExpensesRequest(token)
         expenseCtx.setExpenses(expenses)
       } catch {
         setError('Could Not Fetch Data From The Server!')

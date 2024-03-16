@@ -6,6 +6,7 @@ import { getDateMinusDays } from '../util/date'
 import { getExpensesRequest } from '../util/http'
 import LoadingOverlay from '../components/UI/LoadingOverlay'
 import ErrorOverlay from '../components/UI/ErrorOverlay'
+import { AuthContext } from '../store/Auth-context'
 
 const RecentExpenses = () => {
   const expenseCtx = useContext(ExpensesContext)
@@ -13,9 +14,11 @@ const RecentExpenses = () => {
   const [error, setError] = useState()
   useEffect(() => {
     async function fetchExpenses () {
+      const authCtx = useContext(AuthContext)
+      const token = authCtx.token
       setIsFetching(true)
       try {
-        const expenses = await getExpensesRequest()
+        const expenses = await getExpensesRequest(token)
         expenseCtx.setExpenses(expenses)
       } catch {
         setError('Could Not Fetch Data From The Server!')
