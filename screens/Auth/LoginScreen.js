@@ -9,8 +9,8 @@ export default function LoginScreen() {
   const token = authCtx.token
   const loginHandler = async(enteredEmail, enteredPassword) => {
     try{
-      const token = await userLogin(enteredEmail, enteredPassword);
-      authCtx.authenticate(token);
+      const data = await userLogin(enteredEmail, enteredPassword);
+      authCtx.authenticate(data.token, data.ref_token);
     }catch (error) {
       Alert.alert(
         'Authentication failed!',

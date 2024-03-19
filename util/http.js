@@ -1,6 +1,4 @@
 import axios from 'axios'
-import { useContext } from 'react'
-import { AuthContext } from '../store/Auth-context'
 
 const BACKEND_URL =
   'https://expense-app---react-native-default-rtdb.firebaseio.com/'
@@ -8,7 +6,10 @@ const BACKEND_URL =
 const API_KEY = `AIzaSyCGgRuQGnO4gKKvrTMSoAP6Ze1m2wxHLcY`
 
 export async function storeExpenseRequest (expenseData, token) {
-  const response = await axios.post(BACKEND_URL + `/expenses.json?auth=${token}`, expenseData)
+  const response = await axios.post(
+    BACKEND_URL + `/expenses.json?auth=${token}`,
+    expenseData
+  )
   const id = response.data.name
   return id
 }
@@ -27,9 +28,12 @@ export async function getExpensesRequest (token) {
   }
   return expenses
 }
-
+function autoLogout () {}
 export function updateExpenseRequest (id, expenseData, token) {
-  return axios.put(BACKEND_URL + `/expenses/${id}.json?auth=${token}`, expenseData)
+  return axios.put(
+    BACKEND_URL + `/expenses/${id}.json?auth=${token}`,
+    expenseData
+  )
 }
 export async function deleteExpenseRequest (id, token) {
   return axios.delete(BACKEND_URL + `/expenses/${id}.json?auth=${token}`)
@@ -42,9 +46,9 @@ export async function deleteExpenseRequest (id, token) {
 //     password: password,
 //     returnSecureToken: true
 //   })
-  
+
 // }
-export async function createUser(email, password, name) {
+export async function createUser (email, password, name) {
   const signUpEndpoint = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`
   const userData = {
     email: email,
@@ -54,18 +58,31 @@ export async function createUser(email, password, name) {
   }
   const response = await axios.post(signUpEndpoint, userData)
   return response.data.idToken
+}
 
-    
+export const userLogin = async (email, password) => {
+  const signInEndpoint = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`
+  const userData = {
+    email: email,
+    password: password,
+    returnSecureToken: true
   }
-  
-  export const userLogin = async (email, password) => {
-    const signInEndpoint = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`
-    const userData = {
-      email: email,
-      password: password,
-      returnSecureToken: true
-    }
-    const response = await axios.post(signInEndpoint, userData)
-    console.log(response.data.localId);
-    return response.data.idToken
+  const response = await axios.post(signInEndpoint, userData)
+  const data = {
+    token: response.data.idToken,
+    ref_token: response.data.refreshToken
+  }
+  return data
+}
+
+export const refereshToken = async ref_token => {
+	try {
+		
+		const response = await axios.post('https://securetoken.googleapis.com/v1/token?key='+API_KEY,{
+			grant_type: 'refresh_token',
+			refresh_token: ref_token
+		})
+		authCtx.authenticate(response.data.id_token, response.data.refresh_token);
+	} catch (error) {
+	}
 }

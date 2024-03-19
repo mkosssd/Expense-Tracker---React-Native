@@ -15,149 +15,153 @@ import LoadingOverlay from './components/UI/LoadingOverlay'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ExpensesContextProvider from './store/expenses-context'
 import ManageExpense from './screens/ManageExpense'
+import { refereshToken } from './util/http'
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
 
 const AuthenticationStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: GlobalStyles.colors.primary400 },
-        headerTintColor: 'white'
-      }}
-    >
-      <Stack.Screen name='Login' component={LoginScreen} />
-      <Stack.Screen name='Signup' component={SignupScreen} />
-    </Stack.Navigator>
-  )
+	return (
+		<Stack.Navigator
+			screenOptions={{
+				headerStyle: { backgroundColor: GlobalStyles.colors.primary400 },
+				headerTintColor: 'white'
+			}}
+		>
+			<Stack.Screen name='Login' component={LoginScreen} />
+			<Stack.Screen name='Signup' component={SignupScreen} />
+		</Stack.Navigator>
+	)
 }
 
 const Navigation = () => {
-  const AuthCTX = useContext(AuthContext)
+	const AuthCTX = useContext(AuthContext)
 
-  return (
-    <NavigationContainer>
-      {!AuthCTX.isAuthenticated && <AuthenticationStack />}
-      {AuthCTX.isAuthenticated && (
-        <ExpensesContextProvider>
-          <Stack.Navigator>
-            <Stack.Screen
-              name='Expenses'
-              component={ExpensesOverview}
-              options={({ navigation }) => ({
-                title: 'Expenses',
-                headerShown: false
-              })}
-            />
-            <Stack.Screen
-              name='ManageExpense'
-              component={ManageExpense}
-              options={{
-                presentation: 'modal'
-              }}
-            />
-          </Stack.Navigator>
-        </ExpensesContextProvider>
-      )}
-    </NavigationContainer>
-  )
+	return (
+		<NavigationContainer>
+			{!AuthCTX.isAuthenticated && <AuthenticationStack />}
+			{AuthCTX.isAuthenticated && (
+				<ExpensesContextProvider>
+					<Stack.Navigator>
+						<Stack.Screen
+							name='Expenses'
+							component={ExpensesOverview}
+							options={({ navigation }) => ({
+								title: 'Expenses',
+								headerShown: false
+							})}
+						/>
+						<Stack.Screen
+							name='ManageExpense'
+							component={ManageExpense}
+							options={{
+								presentation: 'modal'
+							}}
+						/>
+					</Stack.Navigator>
+				</ExpensesContextProvider>
+			)}
+		</NavigationContainer>
+	)
 }
 
 const ExpensesOverview = () => {
-  const AuthCTX = useContext(AuthContext)
-  return (
-      <BottomTabs.Navigator
-        screenOptions={({ navigation }) => ({
-          headerStyle: {
-            backgroundColor: GlobalStyles.colors.primary400
-          },
-          headerTintColor: 'white',
-          tabBarStyle: { backgroundColor: GlobalStyles.colors.primary400 },
-          tabBarActiveTintColor: GlobalStyles.colors.primary50,
-          headerRight: () => (
-            <IconButton
-              size={25}
-              icon='exit'
-              color='white'
-              onPress={() => {
-                AuthCTX.logout()
-              }}
-            />
-          )
-        })}
-      >
-        <BottomTabs.Screen
-          name='AllExpenses'
-          component={AllExpenses}
-          options={{
-            headerTitle: 'All Expenses',
-            tabBarLabel: 'All Expenses',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name='calendar' size={size} color={color} />
-            )
-          }}
-        />
-        <BottomTabs.Screen
-          name='RecentExpenses'
-          component={RecentExpenses}
-          options={{
-            headerTitle: 'Recent Expenses',
-            tabBarLabel: 'Recent',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name='hourglass' size={size} color={color} />
-            )
-          }}
-        />
-        <BottomTabs.Screen
-          name='ManageExpenses'
-          component={ManageExpense}
-          options={{
-            tabBarLabel: 'Add',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons size={size} name='add' color={color} />
-            )
-          }}
-        />
-      </BottomTabs.Navigator>
-  )
+	const AuthCTX = useContext(AuthContext)
+	return (
+			<BottomTabs.Navigator
+				screenOptions={({ navigation }) => ({
+					headerStyle: {
+						backgroundColor: GlobalStyles.colors.primary400
+					},
+					headerTintColor: 'white',
+					tabBarStyle: { backgroundColor: GlobalStyles.colors.primary400 },
+					tabBarActiveTintColor: GlobalStyles.colors.primary50,
+					headerRight: () => (
+						<IconButton
+							size={25}
+							icon='exit'
+							color='white'
+							onPress={() => {
+								AuthCTX.logout()
+							}}
+						/>
+					)
+				})}
+			>
+				<BottomTabs.Screen
+					name='AllExpenses'
+					component={AllExpenses}
+					options={{
+						headerTitle: 'All Expenses',
+						tabBarLabel: 'All Expenses',
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons name='calendar' size={size} color={color} />
+						)
+					}}
+				/>
+				<BottomTabs.Screen
+					name='RecentExpenses'
+					component={RecentExpenses}
+					options={{
+						headerTitle: 'Recent Expenses',
+						tabBarLabel: 'Recent',
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons name='hourglass' size={size} color={color} />
+						)
+					}}
+				/>
+				<BottomTabs.Screen
+					name='ManageExpenses'
+					component={ManageExpense}
+					options={{
+						tabBarLabel: 'Add',
+						tabBarIcon: ({ color, size }) => (
+							<Ionicons size={size} name='add' color={color} />
+						)
+					}}
+				/>
+			</BottomTabs.Navigator>
+	)
 }
 
 export default function App () {
-  return (
-    <>
-      <StatusBar style='light' />
-      <AuthContentProvider>
-        <Root />
-      </AuthContentProvider>
-    </>
-  )
+	return (
+		<>
+			<StatusBar style='light' />
+			<AuthContentProvider>
+				<Root />
+			</AuthContentProvider>
+		</>
+	)
 }
 
 const Root = () => {
-  const [isTryingLogin, setIsTryingLogin] = useState(true)
+	const [isTryingLogin, setIsTryingLogin] = useState(true)
 
-  const AuthCTX = useContext(AuthContext)
+	const AuthCTX = useContext(AuthContext)
 
-  useEffect(() => {
-    async function fetchToken () {
-      const storedToken = await AsyncStorage.getItem('token')
+	useEffect(() => {
+		async function fetchToken () {
+			const storedToken = await AsyncStorage.getItem('token')
+			try{
+				const ref_token = await AsyncStorage.getItem('ref_token')
+				await refereshToken(ref_token)
+			}catch(error){}
+			if (storedToken) {
+				AuthCTX.authenticate(storedToken)
+			}
 
-      if (storedToken) {
-        AuthCTX.authenticate(storedToken)
-      }
+			setIsTryingLogin(false)
+		}
 
-      setIsTryingLogin(false)
-    }
+		fetchToken()
+	}, [])
 
-    fetchToken()
-  }, [])
+	if (isTryingLogin) {
+		return <LoadingOverlay />
+	}
 
-  if (isTryingLogin) {
-    return <LoadingOverlay />
-  }
-
-  return <Navigation />
+	return <Navigation />
 }
 
 const styles = StyleSheet.create({})
